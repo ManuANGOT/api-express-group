@@ -1,18 +1,23 @@
-import { Pool } from 'pg';
-import dbConfig from '../../config/database';
+import db from '../../config/database';
 
-const pool = new Pool(dbConfig);
+// const pool = new Pool(dbConfig);
 
-export class User {
+export default class User {
   // ... constructeur et autres méthodes
 
   static async getUsers() {
-    const query = 'SELECT * FROM users';
-
+    //    const query = 'SELECT * FROM "app_users"';
     try {
-      const result = await pool.query(query);
+      const result = await db.query('select * from app_users').then(async (req, res) => {
+        return res.json(req.rows);
+      })
+
+      print(result)
+    
       const users = result.rows;
-      return users.map(user => new User(user.id, user.name, user.firstname, user.address, user.email));
+      return users
+
+      //return users.map(user => new User(id_app_user, name_app_users, first_name__app_users, birth_date_app_users, adress_app_users));
     } catch (error) {
       console.error('Erreur lors de la récupération des utilisateurs :', error);
       throw error;
@@ -20,15 +25,15 @@ export class User {
   }
 
   static async updateUser(id, userData) {
-    const { name, firstname, address, email } = userData;
-    const query = 'UPDATE users SET name = $1, firstname = $2, address = $3, email = $4 WHERE id = $5 RETURNING *';
-    const values = [name, firstname, address, email, id];
+    const { name_app_users, first_name__app_users, birth_date_app_users, address_app_users } = userData;
+    const query = 'UPDATE app_users SET name_app_users = $1, first_name__app_users = $2, birth_date_app_users = $3, adress_app_users = $4 WHERE id_app_user = $5 RETURNING *';
+    const values = [name_app_users, first_name__app_users, birth_date_app_users, address_app_users, id_app_user];
 
     try {
       const result = await pool.query(query, values);
       const updatedUser = result.rows[0];
       if (updatedUser) {
-        return new User(updatedUser.id, updatedUser.name, updatedUser.firstname, updatedUser.address, updatedUser.email);
+        return new User(updatedUser.id_app_user, updatedUser.name_app_users, updatedUser.first_name__app_users, updatedUser.birth_date_app_users, updatedUser.adress_app_users);
       }
       return null;
     } catch (error) {
@@ -38,14 +43,14 @@ export class User {
   }
 
   static async deleteUser(id) {
-    const query = 'DELETE FROM users WHERE id = $1 RETURNING *';
+    const query = 'DELETE FROM app_users WHERE id = $1 RETURNING *';
     const values = [id];
 
     try {
       const result = await pool.query(query, values);
       const deletedUser = result.rows[0];
       if (deletedUser) {
-        return new User(deletedUser.id, deletedUser.name, deletedUser.firstname, deletedUser.address, deletedUser.email);
+        return new User(deletedUser.id_app_user, deletedUser.name_app_users, deletedUser.first_name__app_users, deletedUser.birth_date_app_users, deletedUser.adress_app_users);
       }
       return null;
     } catch (error) {

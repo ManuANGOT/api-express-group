@@ -4,10 +4,10 @@ dotenv.config();
 import { Pool } from 'pg';
 
 const pool = new Pool({
-  user: 'nom_utilisateur',
+  user: 'postgres',
   host: 'localhost',
-  database: 'userDatabase',
-  password: 'mot_de_passe',
+  database: 'p3p',
+  password: 'postgres',
   port: 5432, // Port par défaut de PostgreSQL
 });
 

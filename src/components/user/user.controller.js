@@ -1,12 +1,17 @@
 import { User } from './user.model';
+import db from '../../config/database';
 
 export const getUsers = async (req, res) => {
-  try {
-    const users = await User.getUsers();
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
-  }
+  const result = await db.query('select * from app_users');
+  res.json(result.rows)
+
+
+  //try {
+    //const users = await User.getUsers();
+    //res.json(users);
+  //} catch (error) {
+  //  res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
+  //}
 };
 
 export const createUser = async (req, res) => {
